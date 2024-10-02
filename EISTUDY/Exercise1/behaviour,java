@@ -1,0 +1,61 @@
+// Observer.java
+interface Observer {
+    void update(float stockPrice);
+}
+
+// StockInvestor.java
+class StockInvestor implements Observer {
+    private String name;
+
+    public StockInvestor(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void update(float stockPrice) {
+        System.out.println("Investor " + name + " notified. New stock price: " + stockPrice);
+    }
+}
+
+// Stock.java
+import java.util.ArrayList;
+import java.util.List;
+
+class Stock {
+    private List<Observer> observers = new ArrayList<>();
+    private float price;
+
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+        notifyObservers();
+    }
+
+    private void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update(price);
+        }
+    }
+}
+
+// Main.java
+public class Main {
+    public static void main(String[] args) {
+        Stock stock = new Stock();
+        StockInvestor investor1 = new StockInvestor("Alice");
+        StockInvestor investor2 = new StockInvestor("Bob");
+
+        stock.addObserver(investor1);
+        stock.addObserver(investor2);
+
+        stock.setPrice(100.50f);
+        stock.setPrice(101.00f);
+    }
+}
